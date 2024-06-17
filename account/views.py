@@ -7,27 +7,7 @@ from .decorators import login_required
 from helpers import sms_send, random_code
 
 # Create your views here.
-
-
-# def code_confirmation(request):
-#     email = request.POST.get('email')
-#     code = request.POST.get('code')
-#     user = CustomUser.objects.filter(email=email).first()
-#     if user:
-#         obj = CodeConfirmation.objects.filter(user=user).first()
-#         if obj:
-#             user.is_active = True
-#             user.save()
-#             login(request, user)
-#             obj.delete()
-#             return redirect('home')
-#         return HttpResponse('<h1>Something went wrong</h1>')
-#     print(code)
-#     return render(
-#         request=request,
-#         template_name='auth/code_confirmation.html'
-#     )
-
+@login_required
 def code_confirmation(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -69,107 +49,6 @@ def log_in(request):
         template_name='auth/login.html'
     )
 
-# @login_required
-# def register(request):
-#     if request.method == 'POST':
-#         print(request.POST)
-#         first_name = request.POST.get('first_name')
-#         last_name = request.POST.get('last_name')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         confirm_password = request.POST.get('confirm_password')
-#         # print(first_name, last_name, email, password, confirm_password)
-#         x_user = CustomUser.objects.filter(email=email).first()
-#         if x_user:
-#             return HttpResponse('<h1>Email already registered</h1>')
-#         elif password != confirm_password:
-#             return HttpResponse('<h1>Passwords do not match</h1>')
-#         else:
-#             user = CustomUser.objects.create_user(
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 email=email,
-#                 password=make_password(password),
-#             )
-#             code = random_code.generate_code()
-#             sms_send.send_email(email, code)
-#             CodeConfirmation.objects.create(
-#                 user=user,
-#                 code=code
-#             )
-#             return redirect('code_confirmation')
-#     return render(
-#         request=request,
-#         template_name='auth/register.html'
-#     )
-# @login_required
-# def register(request):
-#     if request.method == 'POST':
-#         print(request.POST)
-#         first_name = request.POST.get('first_name')
-#         last_name = request.POST.get('last_name')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         confirm_password = request.POST.get('confirm_password')
-#         x_user = CustomUser.objects.filter(email=email).first()
-#         if x_user:
-#             return HttpResponse('<h1>Email already registered</h1>')
-#         elif password != confirm_password:
-#             return HttpResponse('<h1>Passwords do not match</h1>')
-#         else:
-#             user = CustomUser.objects.create_user(
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 email=email,
-#                 password=make_password(password),
-#             )
-#             code = random_code.generate_code()
-#             sms_send.send_email(email, code)
-#             CodeConfirmation.objects.create(
-#                 user=user,
-#                 code=code
-#             )
-#             return redirect('code_confirmation')
-#     return render(
-#         request=request,
-#         template_name='auth/register.html'
-#     )
-
-# @login_required
-# def register(request):
-#     if request.method == 'POST':
-#         first_name = request.POST.get('first_name')
-#         last_name = request.POST.get('last_name')
-#         email = request.POST.get('email')
-#         password = request.POST.get('password')
-#         confirm_password = request.POST.get('confirm_password')
-#
-#         if CustomUser.objects.filter(email=email).exists():
-#             return HttpResponse('<h1>Email already registered</h1>')
-#         elif password != confirm_password:
-#             return HttpResponse('<h1>Passwords do not match</h1>')
-#         else:
-#             user = CustomUser.objects.create_user(
-#                 first_name=first_name,
-#                 last_name=last_name,
-#                 email=email,
-#                 password=make_password(password),
-#             )
-#             code = random_code.generate_code()
-#             sms_send.send_email(email, code)
-#             CodeConfirmation.objects.create(
-#                 user=user,
-#                 code=code
-#             )
-#             return redirect('code_confirmation')
-#     return render(
-#         request=request,
-#         template_name='auth/register.html'
-#     )
-
-
-
-
 @login_required
 def register(request):
     if request.method == 'POST':
@@ -190,7 +69,7 @@ def register(request):
                 email=email,
                 password=make_password(password),
             )
-            code = random_code.generate_code()
+            code = random_code.generate_code()  
             sms_send.send_email(email, code)
             CodeConfirmation.objects.create(
                 user=user,
@@ -210,3 +89,14 @@ def log_out(request):
     #     return redirect('world')
 
 
+def forget_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        code = request.POST.get('code')
+        user = CustomUser.objects.get(email=email)
+
+        # print('email: ', email, code)
+    return render(
+        request=request,
+        template_name='auth/forget_password.html'
+    )
