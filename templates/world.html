@@ -28,7 +28,7 @@
     </div>
     <h1 class="category">Certificates</h1>
     <div class="container" id="certificates">
-        {% for certificate in certificates %}
+        {% for certificate in vanues %}
             <div class="maqola" id="for_certificates">
                 <img class="image_main" src="{{ certificate.imageURL }}">
                 <a href="{% url 'article_details' certificate.id %}"><h2>{{ certificate.title }}</h2></a>
@@ -36,6 +36,22 @@
             </div>
         {% endfor %}
     </div>
+    <br>
+    <br>
+
+    {% if vanues.has_previous %}
+        <a class="pagination" href="?page=1">&laquo;</a>
+        <a class="pagination" href="?page={{ vanues.previous_page_number }}">
+        Previous</a>
+    {% endif %}
+
+    Page {{ vanues.number }} of {{ vanues.paginator.num_pages }}
+
+    {% if vanues.has_next %}
+        <a class="pagination" href="?page={{ vanues.next_page_number }}">next</a>
+        <a class="pagination" href="?page={{ vanues.paginator.num_pages }}">&raquo;</a>
+    {% endif %}
+
 {% include 'footer.html' %}
 </body>
 </html>

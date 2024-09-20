@@ -4,8 +4,34 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import api_view
 from .serializer import MySerializer
 from rest_framework.response import Response
+from django.core.paginator import Paginator
 
-# Create your views here.
+from .filters import ProjectFilter
+#
+# def projects(request):
+#     queryset = MaqolaModel.objects.filter(tags='Projects').order_by('-id')
+#     filterset = ProjectFilter(request.GET, queryset=queryset)
+#     context = {
+#         'filterset': filterset
+#     }
+#     return render(
+#         request=request,
+#         template_name='sport.html',
+#         context=context,
+#     )
+
+def projects(request):
+    queryset = MaqolaModel.objects.filter(tags='Projects').order_by('-id')
+    filterset = ProjectFilter(request.GET, queryset=queryset)
+    context = {
+        'filterset': filterset
+    }
+    return render(
+        template_name='sport.html',
+        request=request,
+        context=context,
+    )
+# # Create your views here.
 
 def home(request):
     certificates = MaqolaModel.objects.filter(tags="Certificates").order_by('-id')
@@ -25,25 +51,33 @@ def home(request):
 # @login_required
 def certificates(request):
     certificates = MaqolaModel.objects.filter(tags="Certificates").order_by('-id')
+
+    somsa = Paginator(MaqolaModel.objects.filter(tags="Certificates").order_by('-id'), 1)
+    page = request.GET.get('page')
+    vanues = somsa.get_page(page)
+
     context = {
-        'certificates':certificates
+        'certificates':certificates,
+        'somsa':somsa,
+        'vanues':vanues,
     }
     return render(
         request=request,
         template_name='world.html',
         context=context,
+
     )
 
-def projects(request):
-    projects = MaqolaModel.objects.filter(tags='Projects').order_by('-id')
-    context = {
-        'projects':projects
-    }
-    return render(
-        request=request,
-        template_name='sport.html',
-        context=context,
-    )
+# def projects(request):
+#     projects = MaqolaModel.objects.filter(tags='Projects').order_by('-id')
+#     context = {
+#         'projects':projects
+#     }
+#     return render(
+#         request=request,
+#         template_name='sport.html',
+#         context=context,
+#     )
 
 def education(request):
     education = MaqolaModel.objects.filter(tags='Education').order_by('-id')

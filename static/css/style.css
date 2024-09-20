@@ -440,3 +440,9 @@ div#article_details {
     color: #4CAF50;
 }
 
+.pagination{
+    color: green;
+}
+.pagination:hover {
+    color: greenyellow;
+}
